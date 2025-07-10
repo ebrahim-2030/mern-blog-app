@@ -1,5 +1,5 @@
 // import routing tools from react-router-dom
-import {BrowserRouter, Routes, Route} from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // import page components
 import Home from "./pages/Home";
@@ -8,24 +8,25 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Projects from "./pages/Projects";
 import Dashboard from "./pages/Dashboard";
+import Header from "./components/Header";
 
 const App = () => {
   return (
-
-    
     <BrowserRouter>
+      {/* header */}
+      <Header />
       <Routes>
-         {/* home page route */}
+        {/* home page route */}
         <Route path="/" element={<Home />} />
-         {/* about page route */}
+        {/* about page route */}
         <Route path="/about" element={<About />} />
-         {/* singin page route */}
+        {/* singin page route */}
         <Route path="/signin" element={<SignIn />} />
-         {/* signup page route */}
+        {/* signup page route */}
         <Route path="/signup" element={<SignUp />} />
-         {/* projects page route */}
+        {/* projects page route */}
         <Route path="/projects" element={<Projects />} />
-         {/* dashboard page route */}
+        {/* dashboard page route */}
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
