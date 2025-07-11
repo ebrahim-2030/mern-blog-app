@@ -1,7 +1,10 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 
-export const signup = async (req, res) => {
+// error handler function
+import { errorHandler } from "../utils/error.js";
+
+export const signup = async (req, res, next) => {
   try {
     // extract data from request body
     const { username, email, password } = req.body;
@@ -10,26 +13,24 @@ export const signup = async (req, res) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      next(errorHandler(400, "Invalid email format"));
     }
 
     // check if the username is already exist
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ message: "username is already taken" });
+     next(errorHandler(400, "username is aleardy taken"))
     }
 
     // check if the email is already exist
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
-      return res.status(400).json({ message: "Email is already exist" });
+      next(errorHandler(400, "Email is already exist" ));
     }
 
     // validate password length
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "Password must be 6 charecters long" });
+      next(errorHandler(400, "Password must be 6 charecters long" ))
     }
 
     // generet salt and hash password securely
@@ -51,6 +52,6 @@ export const signup = async (req, res) => {
     res.status(201).json({success: true, message: "User Signed up successfully"});
   } catch (err) {
     console.log("Error in signum controller", err.message);
-    res.status(500).json({ message: "Internal server error" });
+    next(err); 
   }
 };
