@@ -24,7 +24,7 @@ const Header = () => {
       {/* logo */}
       <Link
         to={"/"}
-        className=" self-center  text-sm sm:text-xl font-semibold   px-4 py-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-tl-full rounded-br-full  "
+        className=" self-center  text-sm sm:text-lg font-semibold   px-4 py-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-tl-full rounded-br-full  "
       >
         <span className="">Tech</span>
         Blogs
