@@ -12,25 +12,26 @@ export const signup = async (req, res, next) => {
     // validate email formate using regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+
     if (!emailRegex.test(email)) {
-      next(errorHandler(400, "Invalid email format"));
+      return next(errorHandler(400, "Invalid email format"));
     }
 
     // check if the username is already exist
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-     next(errorHandler(400, "username is aleardy taken"))
+     return next(errorHandler(400, "username is aleardy taken"))
     }
 
     // check if the email is already exist
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
-      next(errorHandler(400, "Email is already exist" ));
+     return next(errorHandler(400, "Email is already exist" ));
     }
 
     // validate password length
     if (password.length < 6) {
-      next(errorHandler(400, "Password must be 6 charecters long" ))
+     return next(errorHandler(400, "Password must be 6 charecters long" ))
     }
 
     // generet salt and hash password securely
@@ -51,7 +52,8 @@ export const signup = async (req, res, next) => {
     // success respond 
     res.status(201).json({success: true, message: "User Signed up successfully"});
   } catch (err) {
-    console.log("Error in signum controller", err.message);
+    console.log("Error in signup controller", err.message);
+    err.message = "Internal Server Error"
     next(err); 
   }
 };

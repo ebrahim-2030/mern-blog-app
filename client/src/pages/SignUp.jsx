@@ -1,7 +1,57 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Alert } from "flowbite-react";
+import { HiInformationCircle } from "react-icons/hi";
+import { Spinner } from "flowbite-react";
 
 const SignUp = () => {
+  const [formData, setFormDate] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+
+  const handleChange = (e) => {
+    setFormDate({ ...formData, [e.target.id]: e.target.value.trim() });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.username || !formData.email || !formData.password) {
+      return setErrorMessage("Please fill all fileds.");
+    }
+
+    try {
+      setLoading(true);
+      setErrorMessage(null);
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        setLoading(null);
+        return setErrorMessage(data.message);
+        
+      }
+
+      setLoading(false);
+
+      if (res.ok) {
+        navigate("/signin");
+      }
+
+    } catch (error) {
+      setLoading(false);
+      setErrorMessage(error.message);
+    }
+  };
+
   return (
     <div className="min-h-screen max-w-screen-md mx-auto pt-20 px-4  ">
       <div className="flex flex-col gap-8 md:flex-row md:items-center md:pt-0">
@@ -23,7 +73,10 @@ const SignUp = () => {
         </div>
         {/* right */}
         <div className="flex-1">
-          <form className="flex max-w-md flex-col gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex max-w-md flex-col gap-4"
+          >
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="username">Your username</Label>
@@ -33,7 +86,7 @@ const SignUp = () => {
                 name="username"
                 type="text"
                 placeholder="username"
-                required
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -45,7 +98,7 @@ const SignUp = () => {
                 type="email"
                 name="email"
                 placeholder="name@example.com"
-                required
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -57,22 +110,37 @@ const SignUp = () => {
                 type="password"
                 name="password"
                 placeholder="password"
-                required
+                onChange={handleChange}
               />
             </div>
 
             <Button
               type="submit"
               className="bg-gradient-to-r from-purple-600 to-pink-500 hover:bg-gradient-to-l focus:ring-blue-300 focus:ring-1 dark:focus:ring-blue-800"
+              disabled={loading}
             >
-              Sign Up
+              {loading ? (
+                <>
+                  <Spinner color="purple" className="" aria-label="Extra small spinner example" size="sm" />
+                  <span className="pl-2">Loading...</span>
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
             {/* <Button type="submit" className="from-pink-600 to-orange-400 hover:bg-gradient-to-b  focus:ring-blue-300 focus:ring-1 dark:focus:ring-blue-800 border-2 border-t-[3px] border-orange-400 hover:border-none text-zinc-700 " outline>Continue with Goolge</Button> */}
           </form>
           <div className="flex items-center gap-2 mt-4 text-sm text-zinc-500">
             <span>Have an account?</span>
-            <Link to={"/signin"} className="text-blue-500 hover:underline">Sign In</Link>
+            <Link to={"/signin"} className="text-blue-500 hover:underline">
+              Sign In
+            </Link>
           </div>
+          {errorMessage && (
+            <Alert color="failure" icon={HiInformationCircle}>
+              <span className="font-medium">Alert!</span> {errorMessage}
+            </Alert>
+          )}
         </div>
       </div>
     </div>
