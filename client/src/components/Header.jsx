@@ -24,10 +24,10 @@ const Header = () => {
       {/* logo */}
       <Link
         to={"/"}
-        className=" self-center  text-sm sm:text-lg font-semibold   px-4 py-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-tl-full rounded-br-full  "
+        className=" self-center  text-sm sm:text-lg font-semibold   pl-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-l-full font-mono   "
       >
-        <span className="">Tech</span>
-        Blogs
+        <span className="mr-1">Tech</span>
+        <span className="bg-white text-purple-500 rounded-l-full px-4">Blogs</span>
       </Link>
       {/* search input form */}
       <form>
@@ -44,7 +44,7 @@ const Header = () => {
         <button className="border  w-10 h-10 flex justify-center items-center rounded-full text-gray-500">
           <AiOutlineSearch size="20" />
         </button>
-        <button className="border  w-10 h-10 flex justify-center items-center rounded-full text-gray-500">
+        <button className="border  w-10 h-10 rounded-full text-gray-500 hidden sm:flex justify-center items-center ">
           <FaMoon size="20" />
         </button>
         <Link to={"/signin"}>
