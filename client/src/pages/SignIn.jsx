@@ -9,15 +9,19 @@ import { Link, useNavigate } from "react-router-dom";
 // import alert feadback icon
 import { HiInformationCircle } from "react-icons/hi";
 
+import { useDispatch, useSelector } from "react-redux";
+import { signinStart, signinSuccess, signinFailuer } from "../redux/user/userSlice";
+
 const SingIn = () => {
   // form data state
   const [formData, setFormDate] = useState({});
-  // error message state
-  const [errorMessage, setErrorMessage] = useState("");
-  // loading state
-  const [loading, setLoading] = useState(false);
+  
+  const {loading, error: errorMessage} = useSelector(state => state.user)
+  
   // navigate hook to redirect the user
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   // handle input change
   const handleChange = (e) => {
@@ -30,13 +34,12 @@ const SingIn = () => {
 
     // validate input fileds
     if (!formData.email || !formData.password) {
-      return setErrorMessage("Please fill all fileds.");
+      return dispatch(signinFailuer('Please fill all the fileds'))
     }
 
     try {
       // start loading and clear error
-      setLoading(true);
-      setErrorMessage(null);
+      dispatch(signinStart());
 
       // send login request to the backend
       const res = await fetch("/api/auth/signin", {
@@ -50,22 +53,20 @@ const SingIn = () => {
 
       // handle error message from the server
       if (data.success === false) {
-        setLoading(null);
-        return setErrorMessage(data.message);
+        dispatch(signinFailuer(data.message))
       }
 
-      // stop loading after successfull response
-      setLoading(false);
+     
 
       // redirect user to the home page
       if (res.ok) {
-        navigate("/");
+        dispatch(signinSuccess(data))
+        navigate("/");  
       }
-    } catch (error) {
+    } catch (err) {
 
       // handle network or server error
-      setLoading(false);
-      setErrorMessage(error.message);
+      dispatch(signinFailuer(err.message))
     }
   };
 
