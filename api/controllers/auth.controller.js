@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 // error handler function
 import { errorHandler } from "../utils/error.js";
@@ -9,10 +10,13 @@ export const signup = async (req, res, next) => {
     // extract data from request body
     const { username, email, password } = req.body;
 
+    // check for empty fields
+    if (!username || !email || !password || username==="" || email === "" || password === "" ) {
+      return next(errorHandler(400, "Plseas fill all fields"));
+    }
+
     // validate email formate using regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
     if (!emailRegex.test(email)) {
       return next(errorHandler(400, "Invalid email format"));
     }
@@ -20,7 +24,7 @@ export const signup = async (req, res, next) => {
     // check if the username is already exist
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-     return next(errorHandler(400, "username is aleardy taken"))
+     return next(errorHandler(400, "username is aleardy taken"));
     }
 
     // check if the email is already exist
@@ -52,8 +56,66 @@ export const signup = async (req, res, next) => {
     // success respond 
     res.status(201).json({success: true, message: "User Signed up successfully"});
   } catch (err) {
+
+    // log the original error message for debugging
     console.log("Error in signup controller", err.message);
-    err.message = "Internal Server Error"
+
+    // replace error message with a generic one for the client
+    err.message = "Internal Server Error";
+
+    // pass error to the next middleware
     next(err); 
   }
 };
+
+export const signin = async(req, res, next) => {
+  try {
+    // extract data from request body
+    const {email, password} = req.body;
+
+    // check for empty fields
+    if (!email || !password || email === "" || password === "" ) {
+      return next(errorHandler(400, "All fileds are required"));
+    }
+
+    // validate email formate using regex using 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return next(errorHandler(400, "Invalid email format"));
+    }
+
+    // validate user
+    const valideUser = await User.findOne({email});
+    if (!valideUser) {  
+      return next(errorHandler(404, "Invalid credentials"));
+    }
+
+    // validate user password
+    const validePassword = bcryptjs.compareSync(password, valideUser.password);
+    if (!validePassword) {
+      return next(errorHandler(400, "Invalid credentials"));
+    }
+
+    // destructure password from user document and keep the rest of the fields
+    const {password: pass , ...rest} = valideUser._doc;
+
+    // create jwt token using user id and seceret key
+    const token = jwt.sign({id: valideUser._id}, process.env.JWT_SECERET);
+
+    // success respond, send token as httponly and return user data
+    res.status(200).cookie('access_token', token, {
+      httpOnly: true
+    }).json(rest);
+
+
+  } catch (err) {
+    // log original error message for debuggin
+    console.log("Error in singin controller", err.message);
+
+    // replace error message with a generic one for the client
+    err.message = "Internal Server Error";
+
+    // pass error to the next middleware
+    next(err);
+  }
+}
