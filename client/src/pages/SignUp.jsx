@@ -1,52 +1,68 @@
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Alert } from "flowbite-react";
-import { HiInformationCircle } from "react-icons/hi";
+// import ui components from flowbite-react
+import { Button, Label, TextInput } from "flowbite-react";
 import { Spinner } from "flowbite-react";
+import { Alert } from "flowbite-react";
+// import react hooks
+import { useState } from "react";
+// import routing tools
+import { Link, useNavigate } from "react-router-dom";
+// import alert feadback icon
+import { HiInformationCircle } from "react-icons/hi";
 
 const SignUp = () => {
+  // form data state
   const [formData, setFormDate] = useState({});
+  // error message state
   const [errorMessage, setErrorMessage] = useState("");
+  // loading state
   const [loading, setLoading] = useState(false);
+  // navigate hook to redirect the user
   const navigate = useNavigate();
 
-
+  // handle input change
   const handleChange = (e) => {
     setFormDate({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
+  // handle form submision
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
+    // validate input fileds
     if (!formData.username || !formData.email || !formData.password) {
       return setErrorMessage("Please fill all fileds.");
     }
 
     try {
+     // start loading and clear error
       setLoading(true);
       setErrorMessage(null);
+
+      // send login request to the backend
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
+      // parse the response
       const data = await res.json();
 
+      // handle error message from the server
       if (data.success === false) {
         setLoading(null);
         return setErrorMessage(data.message);
-        
       }
 
+      // stop loading after successfull response  
       setLoading(false);
 
+      // redirect user to the signin page
       if (res.ok) {
         navigate("/signin");
       }
-
     } catch (error) {
+      // handle network or server error
       setLoading(false);
       setErrorMessage(error.message);
     }
@@ -55,7 +71,8 @@ const SignUp = () => {
   return (
     <div className="min-h-screen max-w-screen-md mx-auto pt-20 px-4  ">
       <div className="flex flex-col gap-8 md:flex-row md:items-center md:pt-0">
-        {/* left */}
+        {/* left section: logo and welcome message */}
+
         <div className="flex-1">
           <Link
             to={"/"}
@@ -71,7 +88,7 @@ const SignUp = () => {
             with your Google account.
           </p>
         </div>
-        {/* right */}
+        {/* right section: signin form */}
         <div className="flex-1">
           <form
             onSubmit={handleSubmit}
@@ -121,7 +138,12 @@ const SignUp = () => {
             >
               {loading ? (
                 <>
-                  <Spinner color="purple" className="" aria-label="Extra small spinner example" size="sm" />
+                  <Spinner
+                    color="purple"
+                    className=""
+                    aria-label="Extra small spinner example"
+                    size="sm"
+                  />
                   <span className="pl-2">Loading...</span>
                 </>
               ) : (
