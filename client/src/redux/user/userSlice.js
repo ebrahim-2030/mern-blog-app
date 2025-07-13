@@ -1,5 +1,7 @@
-import { createSlice, isAction } from "@reduxjs/toolkit";
+// import createSlice from redux toolkit
+import { createSlice } from "@reduxjs/toolkit";
 
+// initial state for the user slice
 const initialState = {
     currentUser : null,
     error: null,
@@ -7,21 +9,25 @@ const initialState = {
 };
 
 
+// create user slice
 const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
+         // trigger when signin starts
         signinStart: (state) => {
             state.loading = true,
             state.error = null
 
         },
+        // trigger on successful signin
         signinSuccess: (state, action) => {
             state.currentUser = action.payload;
             state.loading = false;
             state.error = null;
         },
 
+        // trigger on failure signin
         signinFailuer: (state, action) => {
             state.loading = false;
             state.error = action.payload;
@@ -30,6 +36,8 @@ const userSlice = createSlice({
 })
 
 
+// export actions for dispatching in components
 export const {signinStart, signinSuccess, signinFailuer} = userSlice.actions;
 
+// export reducer to use in the store
 export default userSlice.reducer;
