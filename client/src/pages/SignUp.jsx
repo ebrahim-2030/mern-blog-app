@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import alert feadback icon
 import { HiInformationCircle } from "react-icons/hi";
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
   // form data state
@@ -150,7 +151,7 @@ const SignUp = () => {
                 "Sign Up"
               )}
             </Button>
-            {/* <Button type="submit" className="from-pink-600 to-orange-400 hover:bg-gradient-to-b  focus:ring-blue-300 focus:ring-1 dark:focus:ring-blue-800 border-2 border-t-[3px] border-orange-400 hover:border-none text-zinc-700 " outline>Continue with Goolge</Button> */}
+            <OAuth />
           </form>
           <div className="flex items-center gap-2 mt-4 text-sm text-zinc-500">
             <span>Have an account?</span>

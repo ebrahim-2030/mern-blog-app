@@ -10,14 +10,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { HiInformationCircle } from "react-icons/hi";
 
 import { useDispatch, useSelector } from "react-redux";
-import { signinStart, signinSuccess, signinFailuer } from "../redux/user/userSlice";
+import {
+  signinStart,
+  signinSuccess,
+  signinFailuer,
+} from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 const SingIn = () => {
   // form data state
   const [formData, setFormDate] = useState({});
-  
-  const {loading, error: errorMessage} = useSelector(state => state.user)
-  
+
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
+
   // navigate hook to redirect the user
   const navigate = useNavigate();
 
@@ -34,7 +39,7 @@ const SingIn = () => {
 
     // validate input fileds
     if (!formData.email || !formData.password) {
-      return dispatch(signinFailuer('Please fill all the fileds'))
+      return dispatch(signinFailuer("Please fill all the fileds"));
     }
 
     try {
@@ -53,20 +58,17 @@ const SingIn = () => {
 
       // handle error message from the server
       if (data.success === false) {
-        dispatch(signinFailuer(data.message))
+        dispatch(signinFailuer(data.message));
       }
-
-     
 
       // redirect user to the home page
       if (res.ok) {
-        dispatch(signinSuccess(data))
-        navigate("/");  
+        dispatch(signinSuccess(data));
+        navigate("/");
       }
     } catch (err) {
-
       // handle network or server error
-      dispatch(signinFailuer(err.message))
+      dispatch(signinFailuer(err.message));
     }
   };
 
@@ -139,7 +141,7 @@ const SingIn = () => {
                 "Sign In"
               )}
             </Button>
-            {/* <Button type="submit" className="from-pink-600 to-orange-400 hover:bg-gradient-to-b  focus:ring-blue-300 focus:ring-1 dark:focus:ring-blue-800 border-2 border-t-[3px] border-orange-400 hover:border-none text-zinc-700 " outline>Continue with Goolge</Button> */}
+            <OAuth />
           </form>
           <div className="flex items-center gap-2 mt-4 text-sm text-zinc-500">
             <span>Don't have an account?</span>
