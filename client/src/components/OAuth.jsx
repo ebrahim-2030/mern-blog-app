@@ -30,10 +30,9 @@ const OAuth = () => {
         body: JSON.stringify({
           name: resutlFromGoogle.user.displayName,
           email: resutlFromGoogle.user.email,
-          googlePhotoUrl: resutlFromGoogle.user.googlePhotoUrl
+          googlePhotoUrl: resutlFromGoogle.user.photoURL,
         }),
       })
-
       const data = await res.json();
 
       // if login successful, dispatch to redux and navigate
@@ -41,6 +40,7 @@ const OAuth = () => {
         dispatch(signinSuccess(data));
         navigate("/");
       }
+      console.log(resutlFromGoogle);
 
     } catch (err) {
       console.log(err);

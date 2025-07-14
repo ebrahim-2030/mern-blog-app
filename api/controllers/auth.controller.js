@@ -150,7 +150,7 @@ export const google = async (req, res, next) => {
         .cookie("access_token", token, {
           httpOnly: true,
         })
-        .json({ rest });
+        .json(rest );
     } else {
       // generate random password for new user
       const generetedPassword =
@@ -182,7 +182,7 @@ export const google = async (req, res, next) => {
         .cookie("access_token", token, {
           httpOnly: true,
         })
-        .json(res);
+        .json(rest);
     }
   } catch (error) {
     // log original error message for debuggin
