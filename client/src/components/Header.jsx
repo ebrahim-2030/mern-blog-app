@@ -18,17 +18,20 @@ import { Link, useLocation } from "react-router-dom";
 
 // import icons from react-icons
 import { AiOutlineSearch } from "react-icons/ai";
-import { FaMoon } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { FaMoon, FaSun } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
 import { HiLogout } from "react-icons/hi";
 import { TiUser } from "react-icons/ti";
+import { toggleTheme } from "../redux/theme/themeSlice";
 
 const Header = () => {
+  const dispatch = useDispatch();
   // get current path for active link styling
   const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
   return (
-    <Navbar className="bg-white border-b-2 ">
+    <Navbar className="bg-white  border-b-2 ">
       {/* logo */}
       <Link
         to={"/"}
@@ -51,18 +54,26 @@ const Header = () => {
 
       {/* right side buttons */}
       <div className="flex gap-3 sm:order-2">
-        <button className="border  w-10 h-10 flex justify-center items-center rounded-full text-gray-500">
+        <button className="border  w-10 h-10 flex justify-center items-center rounded-full text-gray-500 dark:text-gray-200">
           <AiOutlineSearch size="20" />
         </button>
-        <button className="border  w-10 h-10 rounded-full text-gray-500 hidden sm:flex justify-center items-center ">
-          <FaMoon size="20" />
+        <button
+          onClick={() => dispatch(toggleTheme())}
+          className="border  w-10 h-10 rounded-full text-gray-500 hidden sm:flex justify-center items-center "
+        >
+          {theme === "light" ? (
+            <FaMoon size="20" />
+          ) : (
+            <FaSun size="20" className="text-gray-200" />
+          )}
         </button>
         {currentUser ? (
           <Dropdown
-            className="p-0 bg-white hover:bg-white"
+            className="p-0 bg-white dark:hover:bg-zinc-700  hover:bg-white dark:bg-zinc-700"
             arrowIcon={false}
             label={
               <Avatar
+                className="bg-transparent"
                 img={currentUser.profilePicture}
                 alt="user avatar"
                 rounded

@@ -28,14 +28,14 @@ const SignUp = () => {
   // handle form submision
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // validate input fileds
     if (!formData.username || !formData.email || !formData.password) {
       return setErrorMessage("Please fill all fileds.");
     }
 
     try {
-     // start loading and clear error
+      // start loading and clear error
       setLoading(true);
       setErrorMessage(null);
 
@@ -55,7 +55,7 @@ const SignUp = () => {
         return setErrorMessage(data.message);
       }
 
-      // stop loading after successfull response  
+      // stop loading after successfull response
       setLoading(false);
 
       // redirect user to the signin page
@@ -84,7 +84,7 @@ const SignUp = () => {
               Blogs
             </span>
           </Link>
-          <p className="mt-4 text-zinc-700">
+          <p className="mt-4 dark:text-gray-200 text-zinc-700">
             Welcome! Please sign up using your email and password, or continue
             with your Google account.
           </p>
@@ -153,7 +153,7 @@ const SignUp = () => {
             </Button>
             <OAuth />
           </form>
-          <div className="flex items-center gap-2 mt-4 text-sm text-zinc-500">
+          <div className="flex items-center gap-2 mt-4 text-sm text-zinc-500 dark:text-gray-200">
             <span>Have an account?</span>
             <Link to={"/signin"} className="text-blue-500 hover:underline">
               Sign In

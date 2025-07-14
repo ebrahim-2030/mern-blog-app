@@ -6,11 +6,14 @@ import userReducer from "./user/userSlice";
 import {persistReducer, persistStore} from "redux-persist";
 // uses localStorage as default
 import storage from "redux-persist/lib/storage"
+// import theme reducer
+import themeReducer from "./theme/themeSlice";
 
 
 // combine all reducers into a root reducer
 const rootReducer  = combineReducers({
-    user: userReducer
+    user: userReducer,
+    theme: themeReducer
 });
 
 // configuration for redux-persist

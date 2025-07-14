@@ -86,7 +86,7 @@ const SingIn = () => {
               Blogs
             </span>
           </Link>
-          <p className="mt-4 text-zinc-700">
+          <p className="mt-4 dark:text-gray-200 text-zinc-700">
             Welcome! Please sign in using your email and password, or continue
             with your Google account.
           </p>
@@ -143,7 +143,7 @@ const SingIn = () => {
             </Button>
             <OAuth />
           </form>
-          <div className="flex items-center gap-2 mt-4 text-sm text-zinc-500">
+          <div className="flex items-center gap-2 mt-4 text-sm text-zinc-500 dark:text-gray-200">
             <span>Don't have an account?</span>
             <Link to={"/signup"} className="text-blue-500 hover:underline">
               Sign Up

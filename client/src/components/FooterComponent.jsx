@@ -24,9 +24,8 @@ const FooterComponent = () => {
     // footer container with top border
     <Footer container className=" border-t-8 border-purple-500 ">
       <div className="w-full">
-
         {/* top section with logo and link groups */}
-        <div className="max-w-screen-xl mx-auto justify-between sm:flex sm:items-start sm:justify-between">
+        <div className="max-w-screen-xl  mx-auto justify-between sm:flex sm:items-start sm:justify-between">
           <Link
             to={"/"}
             className=" text-2xl md:text-4xl font-bold   pl-4 py-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-l-full font-mono   "
@@ -38,7 +37,7 @@ const FooterComponent = () => {
           </Link>
           <FooterLinkGroup className="mt-6 sm:mt-0 flex flex-wrap gap-10 lg:gap-24">
             <div>
-              <span className="text-lg text-zinc-600  mb-6 inline-block">
+              <span className="text-lg dark:text-gray-200  text-zinc-600  mb-6 inline-block">
                 About
               </span>
               <div className="flex flex-col gap-3 ">
@@ -48,7 +47,7 @@ const FooterComponent = () => {
               </div>
             </div>
             <div>
-              <span className="text-lg text-zinc-600  mb-6 inline-block">
+              <span className="text-lg dark:text-gray-200 text-zinc-600  mb-6 inline-block">
                 Blog
               </span>
               <div className="flex flex-col gap-3 ">
@@ -59,7 +58,7 @@ const FooterComponent = () => {
             </div>
 
             <div>
-              <span className="text-lg text-zinc-600  mb-6 inline-block">
+              <span className="text-lg dark:text-gray-200 text-zinc-600  mb-6 inline-block">
                 Legal
               </span>
               <div className="flex flex-col gap-3 ">
@@ -68,7 +67,7 @@ const FooterComponent = () => {
               </div>
             </div>
             <div>
-              <span className="text-lg text-zinc-600  mb-6 inline-block">
+              <span className="text-lg dark:text-gray-200 text-zinc-600  mb-6 inline-block">
                 Follow Me
               </span>
               <div className="flex flex-col gap-3 ">
@@ -82,15 +81,15 @@ const FooterComponent = () => {
         {/* horizontal divider */}
         <FooterDivider />
 
-         {/* bottom section with copyright and social icons */}
+        {/* bottom section with copyright and social icons */}
         <div className="sm:flex items-center  justify-between max-w-screen-xl mx-auto">
           <FooterCopyright
             href="#"
             by="Ebrahim Asil"
-            className="text-base text-zinc-500"
+            className="text-base text-zinc-500 dark:text-gray-200"
             year={new Date().getFullYear()}
           />
-          <div className="text-zinc-500 flex items-center gap-5 text-xl mt-4">
+          <div className="dark:text-gray-200 text-zinc-500 flex items-center gap-5 text-xl mt-4">
             <BsInstagram className="cursor-pointer" />
             <BsTwitterX className="cursor-pointer" />
             <BsGithub className="cursor-pointer" />
