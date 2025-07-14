@@ -10,6 +10,7 @@ import Projects from "./pages/Projects";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
 import FooterComponent from "./components/FooterComponent";
+import PrivateRoute from "./components/PrivateRoute";
 
 const App = () => {
   return (
@@ -27,8 +28,11 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
         {/* projects page route */}
         <Route path="/projects" element={<Projects />} />
-        {/* dashboard page route */}
-        <Route path="/dashboard" element={<Dashboard />} />
+        {/* wrap the dashboard route in private component */}
+        <Route element={<PrivateRoute />}>
+          {/* dashboard page route */}
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
       </Routes>
       {/* footer component */}
       <FooterComponent />
