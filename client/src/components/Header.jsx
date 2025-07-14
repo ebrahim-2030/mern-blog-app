@@ -20,7 +20,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-import { HiLogout } from "react-icons/hi";
+import { HiArrowSmRight, HiLogout, HiUser } from "react-icons/hi";
 import { TiUser } from "react-icons/ti";
 import { toggleTheme } from "../redux/theme/themeSlice";
 
@@ -89,10 +89,10 @@ const Header = () => {
             <DropdownDivider />
 
             <Link to={"/dashboard/?tab=profile"}>
-              <DropdownItem icon={TiUser}>Profile</DropdownItem>
+              <DropdownItem icon={HiUser}>Profile</DropdownItem>
             </Link>
             <DropdownDivider />
-            <DropdownItem icon={HiLogout}>Sign out</DropdownItem>
+            <DropdownItem icon={HiArrowSmRight}>Sign out</DropdownItem>
           </Dropdown>
         ) : (
           <Link to={"/signin"}>
