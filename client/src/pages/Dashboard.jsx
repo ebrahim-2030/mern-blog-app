@@ -27,7 +27,7 @@ useEffect(() => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* sidebare component */}
-      <div className="w-56">
+      <div className="w-full md:w-56">
         <DashSidebar />
       </div>
      {/* render the profile tab content only when tab equals 'profile' */}
