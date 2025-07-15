@@ -7,9 +7,11 @@ export const test = (req, res) => {
 };
 
 export const updateUser = async (req, res, next) => {
+  // check if the logged-in user is the owner of the account
   if (req.user.id !== req.params.userId) {
     return next(errorHandler(403, "You are not allowed to update this user"));
   }
+  // if password is being updated, validate and hash it
   if (req.body.password) {
     if (req.body.password.length < 6) {
       return next(errorHandler(400, "Password must be at least 6 charecters"));
@@ -17,6 +19,7 @@ export const updateUser = async (req, res, next) => {
     req.body.password = bcryptjs.hashSync(req.body.password, 10);
   }
 
+  // if username is being updated, run multiple validations
   if (req.body.username) {
     if (req.body.username.length < 7 || req.body.username.length > 20) {
       return next(
@@ -36,6 +39,7 @@ export const updateUser = async (req, res, next) => {
     }
   }
   try {
+    // update user with new data and return the updated document
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       {
@@ -49,9 +53,28 @@ export const updateUser = async (req, res, next) => {
       { new: true }
     );
 
+    // remove password from the response
     const { password, ...rest } = updatedUser._doc;
+
+    // send the updated user (without password) back to the client
     res.status(200).json(rest);
   } catch (error) {
     next(error);
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  // check if the logged-in user is the owner of the account
+  if (req.user.id !== req.params.userId) {
+    return next(errorHandler(403, "You are not allowed to delete this user"));
+  }
+
+  try {
+    // delete user from the database
+    await User.findByIdAndDelete(req.params.userId);
+    res.status(200).json("User has been deleted successfully");
+  } catch (err) {
+    // handle and pass any errors to the error handler middleware
+    next(err);
   }
 };
