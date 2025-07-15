@@ -36,8 +36,9 @@ const DashSidebar = () => {
               icon={HiUser}
               label="user"
               labelColor="dark"
+              as={"div"}
             >
-              Prifile
+              Profile
             </SidebarItem>
           </Link>
 
