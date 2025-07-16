@@ -21,15 +21,32 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { HiArrowSmRight, HiLogout, HiUser } from "react-icons/hi";
-import { TiUser } from "react-icons/ti";
 import { toggleTheme } from "../redux/theme/themeSlice";
-
+import { signoutSuccess } from "../redux/user/userSlice";
 const Header = () => {
   const dispatch = useDispatch();
   // get current path for active link styling
   const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  // handle user signout
+  const handleSignout = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+
+      const date = await res.json();
+
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
   return (
     <Navbar className="bg-white  border-b-2 ">
       {/* logo */}
@@ -92,7 +109,9 @@ const Header = () => {
               <DropdownItem icon={HiUser}>Profile</DropdownItem>
             </Link>
             <DropdownDivider />
-            <DropdownItem icon={HiArrowSmRight}>Sign out</DropdownItem>
+            <DropdownItem icon={HiArrowSmRight} onClick={handleSignout}>
+              Sign out
+            </DropdownItem>
           </Dropdown>
         ) : (
           <Link to={"/signin"}>

@@ -3,6 +3,7 @@ import {
   test,
   updateUser,
   deleteUser,
+  signout
 } from "../controllers/user.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
@@ -14,5 +15,6 @@ router.get("/test", test);
 router.put("/update/:userId", verifyToken, updateUser);
 // delete route to remove a user — protected with token verification
 router.delete("/delete/:userId", verifyToken, deleteUser);
-
+// signout router to logout a user
+router.post("/signout", signout);
 export default router;

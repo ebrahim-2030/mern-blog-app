@@ -2,10 +2,12 @@ import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import User from "../models/user.model.js";
 
+// test controller 
 export const test = (req, res) => {
   res.json({ message: "API is working!" });
 };
 
+// update user controller
 export const updateUser = async (req, res, next) => {
   // check if the logged-in user is the owner of the account
   if (req.user.id !== req.params.userId) {
@@ -63,6 +65,7 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
+// delete user controller
 export const deleteUser = async (req, res, next) => {
   // check if the logged-in user is the owner of the account
   if (req.user.id !== req.params.userId) {
@@ -73,6 +76,17 @@ export const deleteUser = async (req, res, next) => {
     // delete user from the database
     await User.findByIdAndDelete(req.params.userId);
     res.status(200).json("User has been deleted successfully");
+  } catch (err) {
+    // handle and pass any errors to the error handler middleware
+    next(err);
+  }
+};
+
+// user signout controller
+export const signout = (req, res, next) => {
+  try {
+     // clear the jwt cookie from the browser
+    res.clearCookie("access_token").status(200).json("User has been signout");
   } catch (err) {
     // handle and pass any errors to the error handler middleware
     next(err);

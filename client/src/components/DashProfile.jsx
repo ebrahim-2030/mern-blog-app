@@ -21,7 +21,8 @@ import {
   updateFailure,
   deleteUserStart,
   deleteUserSuccess,
-  deleteUserFailure
+  deleteUserFailure,
+  signoutSuccess
 } from "../redux/user/userSlice";
 
 const DashProfile = () => {
@@ -166,6 +167,26 @@ const DashProfile = () => {
     }
   }
 
+
+// handle user signout
+const handleSignout = async () => {
+  try {
+    const res = await fetch("/api/user/signout", {
+      method: "POST"
+    })
+
+    const date = await res.json();
+
+    if (!res.ok) {
+      console.log(data.message);
+    } else {
+      dispatch(signoutSuccess())
+    }
+  } catch (err) {
+    console.log(err.message)
+  }
+}
+
   return (
     <div className="w-full flex flex-col items-center">
       <div className="w-96 md:w-[500px] mt-4 sm:mt-16">
@@ -244,9 +265,9 @@ const DashProfile = () => {
             className="flex items-center gap-2"
           >
             <MdDelete className="h-4 w-4" />
-            <span>delete</span>
+            <span >delete</span>
           </Button>
-          <Button color="blue" className="flex items-center gap-2">
+          <Button onClick={handleSignout } color="blue" className="flex items-center gap-2">
             <span>sign out</span>
             <HiOutlineArrowRight className="h-4 w-4" />
           </Button>

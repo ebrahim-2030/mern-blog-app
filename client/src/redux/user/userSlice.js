@@ -62,6 +62,14 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    // trigger on signout success
+    signoutSuccess: (state) => {
+      state.currentUser = null;
+      state.error = null;
+      state.loading = false;
+    }
+    
+
   },
 });
 
@@ -76,6 +84,7 @@ export const {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signoutSuccess
 } = userSlice.actions;
 
 // export reducer to use in the store
