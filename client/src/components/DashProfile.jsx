@@ -1,7 +1,17 @@
 // import necessary components and hooks
-import { Alert, Button, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  TextInput,
+} from "flowbite-react";
 import { useRef, useState } from "react";
-import { HiOutlineArrowRight } from "react-icons/hi";
+import {
+  HiOutlineArrowRight,
+  HiOutlineExclamationCircle,
+} from "react-icons/hi";
 import { MdDelete } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import { supabase } from "../supabaseClient";
@@ -9,11 +19,14 @@ import {
   updateStart,
   updateSuccess,
   updateFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure
 } from "../redux/user/userSlice";
 
 const DashProfile = () => {
   // get current user data from redux store
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, error } = useSelector((state) => state.user);
 
   // local state for file, preview url, upload status, and form data
   const [imageFile, setImageFile] = useState(null);
@@ -22,7 +35,7 @@ const DashProfile = () => {
   const [formData, setFormData] = useState({});
   const [updateUserSuccessfuly, setUpdateUserSuccessfuly] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
-
+  const [showModal, setShowModal] = useState(false);
   // reference to hidden file input
   const filePickerRef = useRef(null);
 
@@ -47,7 +60,7 @@ const DashProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUpdateUserSuccessfuly(null);
-    setUpdateUserError(null)
+    setUpdateUserError(null);
 
     // skip if no new input
     if (Object.keys(formData).length === 0 && !imageFile) {
@@ -129,6 +142,30 @@ const DashProfile = () => {
     }
   };
 
+
+  // handle user delete account
+  const handleDeleteUser = async () => {
+    setShowModal(false);
+
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE"
+      })
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        dispatch(deleteUserFailure(data.message))
+      }else{
+        dispatch(deleteUserSuccess(data));
+      }
+      
+    } catch (err) {
+      dispatch(deleteUserFailure(err.message))
+    }
+  }
+
   return (
     <div className="w-full flex flex-col items-center">
       <div className="w-96 md:w-[500px] mt-4 sm:mt-16">
@@ -201,7 +238,11 @@ const DashProfile = () => {
 
         {/* actions: delete and sign out */}
         <div className="flex justify-between mt-4">
-          <Button color="red" className="flex items-center gap-2">
+          <Button
+            onClick={() => setShowModal(true)}
+            color="red"
+            className="flex items-center gap-2"
+          >
             <MdDelete className="h-4 w-4" />
             <span>delete</span>
           </Button>
@@ -217,7 +258,42 @@ const DashProfile = () => {
           )}
 
           {updateUserError && <Alert color="failure">{updateUserError}</Alert>}
+          {error && <Alert color="failure">{error}</Alert>}
         </div>
+      </div>
+
+      {/* delet user warning modal box */}
+      <div>
+        <Modal
+          show={showModal}
+          size="md"
+          onClose={() => setShowModal(false)}
+          popup
+          className="relative"
+        >
+          <div className=" fixed w-80 sm:w-96 bg-white top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 rounded-md">
+            <ModalHeader />
+            <ModalBody>
+              <div className="text-center">
+                <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                  Are you sure you want to delete your account?
+                </h3>
+                <div className="flex justify-center gap-4">
+                  <Button  color="red" onClick={handleDeleteUser}>
+                    Yes, I'm sure
+                  </Button>
+                  <Button
+                    color="alternative"
+                    onClick={() => setShowModal(false)}
+                  >
+                    No, cancel
+                  </Button>
+                </div>
+              </div>
+            </ModalBody>
+          </div>
+        </Modal>
       </div>
     </div>
   );

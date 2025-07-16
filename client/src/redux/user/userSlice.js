@@ -29,20 +29,36 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    // update start
+    // trigger when updating start
     updateStart: (state) => {
       state.loading = true;
       state.error = null;
     },
-    // update success
+    // trigger on updating success
     updateSuccess: (state, action) => {
       state.currentUser = action.payload;
 
       state.loading = false;
       state.error = null;
     },
-    // update failure
+    // trigger on updating failure
     updateFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    // trigger when updating start
+    deleteUserStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    // trigger on updating success
+    deleteUserSuccess: (state) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = null;
+    },
+    // trigger on updating failure
+    deleteUserFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -57,6 +73,9 @@ export const {
   updateStart,
   updateSuccess,
   updateFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } = userSlice.actions;
 
 // export reducer to use in the store
