@@ -86,11 +86,12 @@ const Header = () => {
         </button>
         {currentUser ? (
           <Dropdown
-            className="p-0 bg-white dark:hover:bg-zinc-700  hover:bg-white dark:bg-zinc-700"
+             pill
+            className=" p-0  "
             arrowIcon={false}
             label={
               <Avatar
-                className="bg-transparent"
+                className="bg-transparent rounded-full"
                 img={currentUser.profilePicture}
                 alt="user avatar"
                 rounded

@@ -109,7 +109,7 @@ export const signin = async (req, res, next) => {
     const { password: pass, ...rest } = valideUser._doc;
 
     // create jwt token using user id and seceret key
-    const token = jwt.sign({ id: valideUser._id }, process.env.JWT_SECERET);
+    const token = jwt.sign({ id: valideUser._id, isAdmin: valideUser.isAdmin }, process.env.JWT_SECERET);
 
     // success respond, send token as httponly and return user data
     res
@@ -141,7 +141,7 @@ export const google = async (req, res, next) => {
 
     if (user) {
       // user exists: generate jwt token and send response
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECERET);
+      const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECERET);
       const { password: pass, ...rest } = user._doc;
 
       // send user data without password
@@ -173,7 +173,7 @@ export const google = async (req, res, next) => {
       
       // save user to database
       await newUser.save();
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECERET);
+      const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, process.env.JWT_SECERET);
       const { password: pass, ...rest } = newUser._doc;
 
       // send newUser data
