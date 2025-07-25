@@ -14,7 +14,10 @@ const Blog = () => {
   // state for comments
   const [comments, setComments] = useState([]);
   // state for commnet
-  const [comment, setComment] = useState({});
+  const [comment, setComment] = useState({
+    name: "",
+    email: "",
+  });
 
   // handle change, for comment data
   const handleChange = (e) => {
