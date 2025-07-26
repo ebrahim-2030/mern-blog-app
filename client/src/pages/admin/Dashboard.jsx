@@ -21,7 +21,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex-1 p-4 md:p-6 bg-blue-50/50">
+    <div className="flex-1 p-4 min-h-screen md:p-6 bg-blue-50/50">
       {/* cards section */}
       <div className="flex flex-wrap gap-4">
         <div className="flex items-center gap-4 bg-white p-4 min-w-56 rounded shadow cursor-pointer hover:scale-105 transition-all">
@@ -75,7 +75,7 @@ const Dashboard = () => {
                 <th scope="col" className="px-2 py-4 max-sm:hidden">
                   Status
                 </th>
-                <th scope="col" className="px-2 py-4 max-sm:hidden">
+                <th scope="col" className="px-2 py-4">
                   Actions
                 </th>
               </tr>

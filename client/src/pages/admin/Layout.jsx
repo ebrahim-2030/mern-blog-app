@@ -12,8 +12,8 @@ const Layout = () => {
     navigate("/");
   };
   return (
-    <>
-      <div className="flex items-center cursor-pointer justify-between py-2 h-[70px] px-4 sm:px24 border-b border-gray-100">
+    <div className="">
+      <div className=" max-w-[1560px] mx-auto flex items-center cursor-pointer justify-between py-2 h-[70px] px-4 sm:px24 border-b border-gray-100">
         {/* logo */}
         <img
           onClick={() => navigate("/")}
@@ -31,13 +31,13 @@ const Layout = () => {
         </button>
       </div>
       {/* main section */}
-      <div className="flex h-[calc(100vh-70px)]">
+      <div className="flex justify-between  max-w-[1560px] mx-auto">
         {/* sidebar */}
         <Sidebar />
         {/* outlet */}
         <Outlet />
       </div>
-    </>
+    </div>
   );
 };
 

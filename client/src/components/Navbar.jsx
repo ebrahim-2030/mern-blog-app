@@ -6,7 +6,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   return (
     // navbar
-    <div className="flex items-center cursor-pointer justify-between px-4 sm:px-0 py-5 mx:8 sm:mx-20 xl:mx-32">
+    <div className="flex items-center cursor-pointer justify-between px-4 max-w-[1560px] py-6 mx-auto">
       {/* logo */}
       <img
         onClick={() => navigate("/")}

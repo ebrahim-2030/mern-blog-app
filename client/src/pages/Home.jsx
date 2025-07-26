@@ -7,8 +7,8 @@ import Newletter from "../components/Newletter";
 const Home = () => {
   return (
     <>
-      <div className="px-4">
-        <Navbar />
+      <Navbar />
+      <div className="px-4 max-w-[1560px] mx-auto">
         <Header />
         <BlogList />
         <Newletter />

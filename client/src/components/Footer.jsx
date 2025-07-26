@@ -6,7 +6,7 @@ const Footer = () => {
     // footer
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 bg-primary/3 ">
         {/* footer content */}
-      <div className="flex flex-col md:flex-row flex-wrap  justify-between gap-10 py-10 border-b border-gray-500/30 text-gray-500">
+      <div className="flex max-w-[1560px] mx-auto  flex-col md:flex-row flex-wrap  justify-between gap-10 py-10 border-b border-gray-500/30 text-gray-500">
       {/* footer left */}
         <div>
           <img className="w-32 sm:w-44" src={assets.logo} alt="logo" />
