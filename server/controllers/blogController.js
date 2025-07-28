@@ -1,6 +1,7 @@
 import imagekit from "../configs/imageKit.js";
 import Blog from "../models/Blog.js";
 import fs from "fs";
+import Comment from "../models/Comment.js";
 
 // controller for adding blog
 export const addBlog = async (req, res) => {
@@ -101,6 +102,9 @@ export const deleteBlogById = async (req, res) => {
     // delete blog by id from database
     await Blog.findByIdAndDelete(blogId);
 
+    // delete all commnets associated with the blog
+    await Comment.deleteMany({blog: blogId});
+
     res.json({ success: true, message: "Blog deleted successfully" });
   } catch (err) {
     // send failure response if blog is not found/any error
@@ -124,6 +128,40 @@ export const togglePublished = async (req, res) => {
     res.json({ success: true, message: "Blog status updated successfully" });
   } catch (err) {
     // send failure response if blog is not updated / any error
+    res.json({ sucess: false, message: err.message });
+  }
+};
+
+export const addComment = async (req, res) => {
+  // destructuring comment data
+  const { blog, name, content } = req.body;
+  try {
+    // create & store a comment
+    await Comment.create({ blog, name, content });
+
+    // send success response if comment added successfully
+    res.json({ success: true, message: "Comment added for review" });
+  } catch (err) {
+    // send failure response if comment is not added / any error
+    res.json({ sucess: false, message: err.message });
+  }
+};
+
+export const getBlogComment = async (req, res) => {
+  // destructuring blog id
+  const { blogId } = req.body;
+
+  try {
+    // fetch comments
+    const comments = await Comment.find({
+      blog: blogId,
+      isApproved: true,
+    }).sort({ createdAt: -1 }); // sort comments by createdAt in descending order
+
+    // send success response if comments are found successfully
+    res.json({ success: true, comments });
+  } catch (err) {
+    // send failure response if comments are not found / any error
     res.json({ sucess: false, message: err.message });
   }
 };
