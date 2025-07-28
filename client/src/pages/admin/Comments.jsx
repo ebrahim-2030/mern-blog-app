@@ -1,18 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { comments_data } from "../../assets/assets";
+import { useEffect, useState } from "react";
+
 import CommentTableItem from "../../components/admin/CommentTableItem";
+import toast from "react-hot-toast";
+import { useAppContext } from "../../context/AppContext";
 
 const Comments = () => {
   // state for comments
   const [comments, setComments] = useState([]);
+
   // state to trigger comment filter
   const [filter, setFilter] = useState("Not Approved");
 
-  // fetch comments
+  // get axios instance from app context
+  const {axios} = useAppContext();
+
+  
+  // fetch comments from admin api route
   const fetchComments = async () => {
-    setComments(comments_data);
+    try {
+      const { data } = await axios("/api/admin/comments");
+      data.success ? setComments(data.comments) : toast.error(data.message);
+    } catch (err) {
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        toast.error(err.message);
+        console.log(err);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
 
+  // run fetchComments once on mount
   useEffect(() => {
     fetchComments();
   }, []);

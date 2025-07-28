@@ -57,7 +57,7 @@ export const getAllComment = async (req, res) => {
 export const getDashboard = async (req, res) => {
   try {
     // get all comments from db
-    const recentBlogs = await Blog.find({}).sort({ createdAt: true }).limit(5);
+    const recentBlogs = await Blog.find({}).sort({ createdAt: -1 }).limit(5);
 
     // get all blogs count
     const blogs = await Blog.countDocuments({});

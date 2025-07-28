@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { assets, blog_data, comments_data } from "../assets/assets";
+import { assets } from "../assets/assets";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Moment from "moment";
 import Loader from "../components/Loader";
+import toast from "react-hot-toast";
+import { useAppContext } from "../context/AppContext";
 
 const Blog = () => {
   // get blog id
@@ -19,6 +21,8 @@ const Blog = () => {
     email: "",
   });
 
+  const { axios } = useAppContext();
+
   // handle change, for comment data
   const handleChange = (e) => {
     setComment({ ...comment, [e.target.name]: e.target.value });
@@ -26,19 +30,64 @@ const Blog = () => {
 
   // fetch blog data
   const fetchBlogData = async () => {
-    const foundBlog = blog_data.find((blog) => blog._id === id);
-    setData(foundBlog);
+    try {
+      const { data } = await axios.get(`/api/blog/${id}`);
+
+      if (data.success) {
+        setData(data.blog);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        toast.error(err.message);
+        console.log(err);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }c
+    }
   };
 
-  // fetch comments
+  // fetch comments from comments api
   const fetchComments = async () => {
-    setComments(comments_data);
+    try {
+      const { data } = await axios.post("/api/blog/comments", { blogId: id });
+      data.success ? setComments(data.comments) : toast.error(data.message);
+    } catch (err) {
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        toast.error(err.message);
+        console.log(err);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
 
-  // add comment
-  const addComment = (e) => {
+  // handle add comment
+  const addComment = async (e) => {
     e.preventDefault();
+    try {
+      const { data } = await axios.post("/api/blog/add-comment", {
+        ...comment,
+        blog: id,
+      });
+      if (data.success) {
+        toast.success(data.message);
+        setComment({ name: "", email: "" });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        toast.error(err.message);
+        console.log(err);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
+
+  // fetch blog data and comments
   useEffect(() => {
     fetchBlogData();
     fetchComments();

@@ -53,7 +53,7 @@ export const addBlog = async (req, res) => {
     res.json({ success: true, message: "Blog added successfully" });
   } catch (err) {
     // send failure response, if blog creation fails
-    res.json({ scuccess: false, message: err.message });
+    res.json({ success: false, message: err.message });
   }
 };
 
@@ -111,7 +111,6 @@ export const deleteBlogById = async (req, res) => {
     res.json({ sucess: false, message: err.message });
   }
 };
-
 export const togglePublished = async (req, res) => {
   const { blogId } = req.body;
   try {

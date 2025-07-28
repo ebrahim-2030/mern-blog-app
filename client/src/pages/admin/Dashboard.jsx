@@ -1,6 +1,8 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { assets, dashboard_data } from "../../assets/assets";
+import { useEffect, useState } from "react";
+import { assets } from "../../assets/assets";
 import BlogTableItem from "../../components/admin/BlogTableItem";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
   // state to store dashboard data
@@ -11,11 +13,26 @@ const Dashboard = () => {
     recentBlogs: [],
   });
 
-  // fetch dashboard data
+  const { axios } = useAppContext();
+  // fetch dashboard data from dashboard api
   const fetchDashboard = async () => {
-    setDashboardData(dashboard_data);
+    try {
+      const { data } = await axios("/api/admin/dashboard");
+      data.success
+        ? setDashboardData(data.dashboardData)
+        : toast.error(data.message);
+      console.log(data);
+    } catch (err) {
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        toast.error(err.message);
+        console.log(err);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
 
+  // fetch dashboard data on page load
   useEffect(() => {
     fetchDashboard();
   }, []);

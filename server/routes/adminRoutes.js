@@ -17,7 +17,7 @@ adminRouter.post("/login", adminLogin);
 // get all comments route
 adminRouter.get("/comments", auth, getAllComment);
 // get all blogs route
-adminRouter.get("blog", auth, getAllBlogsAdmin);
+adminRouter.get("/blogs", auth, getAllBlogsAdmin);
 // delete comment route
 adminRouter.post("/delete-comment", auth, deleteCommentById);
 // approved comment route

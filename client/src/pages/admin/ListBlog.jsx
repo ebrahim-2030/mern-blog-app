@@ -1,14 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { blog_data } from "../../assets/assets";
+import { useEffect, useState } from "react";
+
 import BlogTableItem from "../../components/admin/BlogTableItem";
+import toast from "react-hot-toast";
+import { useAppContext } from "../../context/AppContext";
 
 const ListBlog = () => {
+  // state for blogs
   const [blogs, setBlogs] = useState([]);
 
+  // get axios instance from app context
+  const { axios } = useAppContext();
+
+  // fetch all blogs from blog api
   const fetchBlogs = async () => {
-    setBlogs(blog_data);
+    try {
+      const { data } = await axios("/api/admin/blogs");
+
+      data.success ? setBlogs(data.blogs) : toast.error(data.message);
+    } catch (err) {
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        toast.error(err.message);
+        console.log(err);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
 
+  // fetch blogs on component mount
   useEffect(() => {
     fetchBlogs();
   }, []);

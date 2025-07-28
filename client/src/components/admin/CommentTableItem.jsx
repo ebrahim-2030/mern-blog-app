@@ -1,9 +1,61 @@
-import React from "react";
 import { assets } from "../../assets/assets";
+import toast from "react-hot-toast";
+import { useAppContext } from "../../context/AppContext";
 
 const CommentTableItem = ({ comment, index, fetchComments }) => {
   const { blog, createdAt, _id } = comment;
   const BlogData = new Date(createdAt);
+
+  // get axios instance from app context
+  const { axios } = useAppContext();
+
+  // handle approve comment
+  const approveComment = async () => {
+    try {
+      const { data } = await axios.post("/api/admin/approve-comment", {
+        id: _id,
+      });
+      if (data.success) {
+        toast.success(data.message);
+        fetchComments();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        toast.error(err.message);
+        console.log(err);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
+  };
+
+  // handle delete comment
+  const deleteComment = async () => {
+    const confirm = window.confirm(
+      "Are you sure you want to delete this commnet?"
+    );
+    if (!confirm) return;
+
+    try {
+      const { data } = await axios.post("/api/admin/delete-comment", { id: _id });
+
+      if (data.success) {
+        toast.success(data.message);
+        fetchComments();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        toast.error(err.message);
+        console.log(err);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
+  };
   return (
     <tr className="border-y border-zinc-300">
       <td className="px-6 py-4">
@@ -19,6 +71,7 @@ const CommentTableItem = ({ comment, index, fetchComments }) => {
         <div className="inline-flex items-center gap-4">
           {!comment.isApproved ? (
             <img
+              onClick={approveComment}
               src={assets.tick_icon}
               className="w-5 hover:scale-110 transition-all cursor-pointer"
               alt=""
@@ -30,6 +83,7 @@ const CommentTableItem = ({ comment, index, fetchComments }) => {
           )}
 
           <img
+            onClick={deleteComment}
             src={assets.bin_icon}
             className="w-5 hover:scale-110 transition-all cursor-pointer"
             alt=""

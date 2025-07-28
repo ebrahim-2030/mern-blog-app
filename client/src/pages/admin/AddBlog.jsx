@@ -1,11 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { assets, blogCategories } from "../../assets/assets";
 import Quill from "quill";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 const AddBlog = () => {
+  const { axios } = useAppContext();
+
   // refs for the Quill editor instance and its container
   const editorRef = useRef(null);
   const quillRef = useRef(null);
+
+  const [isAdding, setIsAdding] = useState(false);
 
   // state variables for form fields
   const [image, setImage] = useState(false);
@@ -17,6 +23,52 @@ const AddBlog = () => {
   // handle form submission
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    if (!title || !quillRef.current.root.innerHTML || !category || !image) {
+      return toast.error("Please fill in all required fields.");
+    }
+
+    console.log("QUILL TEXT:", quillRef.current.getText());
+    console.log("IMAGE:", image);
+    console.log("TITLE:", title);
+    try {
+      setIsAdding(true);
+
+      const quillContent = quillRef.current.getText().trim();
+
+      const blog = {
+        title,
+        subTitle,
+        description: quillContent,
+        category,
+        isPublished,
+      };
+
+      const formData = new FormData();
+      formData.append("blog", JSON.stringify(blog));
+      formData.append("image", image);
+
+      const { data } = await axios.post("/api/blog/add", formData);
+
+      if (data.success) {
+        toast.success(data.message);
+        setTitle("");
+        setSubtitle("");
+        quillRef.current.root.innerHTML = "";
+        setCategory("Startup");
+        setIsPublished(false);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        toast.error(err.message);
+        console.log(err);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   //  generate content using AI
@@ -116,10 +168,11 @@ const AddBlog = () => {
 
         {/* add blog buttons */}
         <button
+          disabled={isAdding}
           type="submit"
           className="mt-8 w-40 h-10 bg-primary text-white text-sm rounded cursor-pointer"
         >
-          Add Blog
+          {isAdding ? "Adding . . ." : "Add Blog"}
         </button>
       </div>
     </form>

@@ -1,7 +1,26 @@
-import React from "react";
+import { useRef } from "react";
 import { assets } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
 
 const Header = () => {
+
+  // get input state from AppContext
+  const { input, setInput } = useAppContext();
+
+  // define input ref
+  const inputRef = useRef(null);
+
+  // handle form submision
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setInput(inputRef.current.value);
+  };
+
+  // clear input
+  const onClear = () => {
+    setInput(" ");
+    inputRef.current.value = " ";
+  };
   return (
     // header
     <div className=" sm:mx-20 xl:mx-32  relative">
@@ -25,12 +44,28 @@ const Header = () => {
         </p>
 
         {/* search form */}
-        <form className="flex justify-between max-w-lg max-sm:scale-75 mx-auto border border-gray-300 bg-white overflow-hidden rounded">
-          <input type="text" required className="w-full pl-4 outline-none" />
+        <form
+          onSubmit={handleSubmit}
+          className="flex justify-between max-w-lg max-sm:scale-75 mx-auto border border-gray-300 bg-white overflow-hidden rounded"
+        >
+          <input
+            ref={inputRef}
+            type="text"
+            required
+            className="w-full pl-4 outline-none"
+          />
           <button className="bg-primary text-white px-8 py-2 m-1.5  rounded hover:scale-105 transition-all cursor-pointer">
             submit
           </button>
         </form>
+      </div>
+      {/* clear search button */}
+      <div className="w-full flex justify-center">
+        {input && (
+          <button onClick={onClear} className="border border-zinc-300 py-1 px-3 font-light text-xs rounded-sm shadow-sm cursor-pointer">
+            Clear Search
+          </button>
+        )}
       </div>
       {/* gradinet background */}
       <img
