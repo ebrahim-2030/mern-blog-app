@@ -4,8 +4,15 @@ import "dotenv/config";
 import connectDB from "./configs/db.js";
 import adminRouter from "./routes/adminRoutes.js";
 import blogRouter from "./routes/blogRoutes.js";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors({
+  origin: "https://mern-blog-app-git-main-ebrahims-projects-5ed3382f.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
 
 await connectDB();
 
