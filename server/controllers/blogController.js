@@ -2,6 +2,7 @@ import imagekit from "../configs/imageKit.js";
 import Blog from "../models/Blog.js";
 import fs from "fs";
 import Comment from "../models/Comment.js";
+import main from "../configs/gemeni.js";
 
 // controller for adding blog
 export const addBlog = async (req, res) => {
@@ -103,7 +104,7 @@ export const deleteBlogById = async (req, res) => {
     await Blog.findByIdAndDelete(blogId);
 
     // delete all commnets associated with the blog
-    await Comment.deleteMany({blog: blogId});
+    await Comment.deleteMany({ blog: blogId });
 
     res.json({ success: true, message: "Blog deleted successfully" });
   } catch (err) {
@@ -161,6 +162,21 @@ export const getBlogComment = async (req, res) => {
     res.json({ success: true, comments });
   } catch (err) {
     // send failure response if comments are not found / any error
-    res.json({ sucess: false, message: err.message });
+    res.json({ success: false, message: err.message });
+  }
+};
+
+export const generateContent = async (req, res) => {
+  const { prompt } = req.body;
+
+  try {
+    const content = await main(
+      prompt + " Generate a blog content for this topic in simple text format"
+    );
+
+    res.json({ success: true, content });
+  } catch (err) {
+    // send failure response if content is not generated / any error
+    res.json({ success: false, message: err.message });
   }
 };

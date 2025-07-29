@@ -17,17 +17,20 @@ export const AppProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // fetch all blogs from server
   const fetchBlogs = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.get("/api/blog/all");
       data.success ? setBlogs(data.blogs) : toast.error(data.message);
     } catch (err) {
       toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
-
 
   // on mound: fetch all blogs from server and set the token fron localstorage
   useEffect(() => {
@@ -38,7 +41,7 @@ export const AppProvider = ({ children }) => {
       setToken(token);
 
       // set default authorization header for axios requests
-      axios.defaults.headers.common['Authorization'] = `${token}`
+      axios.defaults.headers.common["Authorization"] = `${token}`;
     }
   }, []);
 
@@ -52,6 +55,7 @@ export const AppProvider = ({ children }) => {
     setBlogs,
     input,
     setInput,
+    loading
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

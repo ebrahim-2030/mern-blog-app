@@ -1,5 +1,5 @@
-import {  motion } from "motion/react";
-import {  useState } from "react";
+import { motion } from "motion/react";
+import { useState } from "react";
 import { blogCategories } from "../assets/assets";
 import BlogCard from "../components/BlogCard";
 import { useAppContext } from "../context/AppContext";
@@ -9,7 +9,7 @@ const BlogList = () => {
   const [blogCategory, setBlogCategory] = useState("All");
   // state for blogs
   // const [blogs, setBlogs] = useState(blog_data);
-  const { blogs, input } = useAppContext();
+  const { blogs, input, loading } = useAppContext();
 
   // filter blogs, based on blog category
   const fileredBlogs = blogs.filter((blog) => {
@@ -49,11 +49,17 @@ const BlogList = () => {
       </div>
 
       {/* blog cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-24 mt-8  sm:mx-16 xl:mx-40">
-        {fileredBlogs.map((blog) => {
-          return <BlogCard key={blog._id} blog={blog} />;
-        })}
-      </div>
+      {loading ? (
+        <h1 className="w-full text-center text-primary/70">Loading . . . </h1>
+      ) : fileredBlogs.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-24 mt-8  sm:mx-16 xl:mx-40">
+          {fileredBlogs.map((blog) => {
+            return <BlogCard key={blog._id} blog={blog} />;
+          })}
+        </div>
+      ) : (
+        <h1 className="w-full text-center text-primary/70">No Blogs Found!</h1>
+      )}
     </div>
   );
 };

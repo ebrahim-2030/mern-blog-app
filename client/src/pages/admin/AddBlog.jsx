@@ -3,6 +3,7 @@ import { assets, blogCategories } from "../../assets/assets";
 import Quill from "quill";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
+import { parse } from "marked";
 
 const AddBlog = () => {
   const { axios } = useAppContext();
@@ -12,6 +13,7 @@ const AddBlog = () => {
   const quillRef = useRef(null);
 
   const [isAdding, setIsAdding] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // state variables for form fields
   const [image, setImage] = useState(false);
@@ -20,6 +22,7 @@ const AddBlog = () => {
   const [category, setCategory] = useState("Startup");
   const [isPublished, setIsPublished] = useState(false);
 
+
   // handle form submission
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -27,13 +30,11 @@ const AddBlog = () => {
       return toast.error("Please fill in all required fields.");
     }
 
-    console.log("QUILL TEXT:", quillRef.current.getText());
-    console.log("IMAGE:", image);
-    console.log("TITLE:", title);
     try {
       setIsAdding(true);
 
-      const quillContent = quillRef.current.getText().trim();
+      // const quillContent = quillRef.current.getText().trim();
+      const quillContent = quillRef.current.root.innerHTML.trim();
 
       const blog = {
         title,
@@ -56,6 +57,7 @@ const AddBlog = () => {
         quillRef.current.root.innerHTML = "";
         setCategory("Startup");
         setIsPublished(false);
+        setImage(false)
       } else {
         toast.error(data.message);
       }
@@ -72,7 +74,31 @@ const AddBlog = () => {
   };
 
   //  generate content using AI
-  const generateContent = async () => {};
+  const generateContent = async () => {
+    if (!title) return toast.error("Please enter a title");
+
+    try {
+      setLoading(true);
+      const { data } = await axios.post("/api/blog/generate", {
+        prompt: title,
+      });
+
+      if (data.success) {
+        quillRef.current.root.innerHTML = parse(data.content);
+      } else {
+        toast.error("❗Service Unavailable in Your Region");
+      }
+    } catch (err) {
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        toast.error(err.message);
+        console.log(err);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // intial Quill only once
@@ -108,6 +134,7 @@ const AddBlog = () => {
         {/* blog title */}
         <p className="mt-4">Blog Title</p>
         <input
+        value={title}
           type="text"
           placeholder="type here"
           required
@@ -118,6 +145,7 @@ const AddBlog = () => {
         {/* blog subtitle */}
         <p className="mt-4">Blog Subtitle</p>
         <input
+        value={subTitle}
           type="text"
           placeholder="type here"
           required
@@ -129,7 +157,17 @@ const AddBlog = () => {
         <p className="mt-4">Blog Describtion</p>
         <div className="max-w-lg h-74 pb-26 sm:pb-10 pt-2 relative">
           <div ref={editorRef}></div>
+          {
+            loading && (
+              <div className="absolute inset-0 flex items-center justify-center bgzinc-700/50 mt-2">
+                <div className="h-8 w-8 rounded-full border border-t-white animate-spin">
+
+                </div>
+              </div>
+            )
+          }
           <button
+            disabled={loading}
             type="button"
             onClick={generateContent}
             className="absolute bottom-1 right-2 ml-2 text-xs text-white bg-zinc-700 px-4 py-1.5 rounded hover:underline cursor-pointer"
@@ -141,6 +179,7 @@ const AddBlog = () => {
         {/* blog category */}
         <p className="mt-4">Blog Category</p>
         <select
+        value={category}
           onChange={(e) => setCategory(e.target.value)}
           name="category"
           className="mt-2 px-3 py-2 border  text-zinc-500 border-zinc-300 outline-none rounded"
